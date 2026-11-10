@@ -139,6 +139,7 @@ tr:hover{background:#f8f9fa}
 .empty-cart,.no-products{text-align:center;padding:20px;color:#6c757d;font-style:italic}
 
 :root{--gold:#c49a3a;--gold-hover:#a97f1f;--charcoal:#252525;--ivory:#f6f2e8;--surface:#fffdf7;--line:#e4ddce}
+.dashboard-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
 body{background:var(--ivory);color:var(--charcoal)}
 header,.mobile-menu{background:var(--charcoal);background-image:none}
 nav ul li a:hover,nav ul li a.active,.mobile-menu ul li a:hover,.mobile-menu ul li a.active{background:var(--gold);color:var(--charcoal)}
@@ -171,7 +172,7 @@ tr:hover{background:#f3eddf}
 .app-footer .container{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:14px;padding-bottom:14px}
 .app-footer strong{color:var(--gold)}
 .empty-cart,.no-products{color:#706b60}
-@media(max-width:576px){.app-footer .container{flex-direction:column;text-align:center}}
+@media(max-width:576px){.app-footer .container{flex-direction:column;text-align:center}.dashboard-heading{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
@@ -209,7 +210,10 @@ tr:hover{background:#f3eddf}
 
     <!-- DASHBOARD -->
     <div id="dashboard" class="tab-content">
-      <h2>Shop Overview</h2>
+      <div class="dashboard-heading">
+        <h2>Shop Overview</h2>
+        <button id="reset-dashboard" class="btn btn-secondary"><i class="fas fa-rotate-left"></i> Reset Overview</button>
+      </div>
       <div class="dashboard-summary">
         <div class="summary-card"><i class="fas fa-shopping-cart"></i><h3>TODAY'S SALES</h3><div class="value">KES <span id="today-sales">0.00</span></div></div>
         <div class="summary-card"><i class="fas fa-boxes"></i><h3>TOTAL PRODUCTS</h3><div class="value"><span id="total-products">0</span></div></div>
@@ -369,6 +373,13 @@ const DataManager = {
     return p ? JSON.parse(p) : null;
   },
   saveProducts(products) { localStorage.setItem('computerShopProducts', JSON.stringify(products)); },
+  getDashboardBaseline() {
+    const baseline = localStorage.getItem('computerShopDashboardBaseline');
+    return baseline ? JSON.parse(baseline) : null;
+  },
+  saveDashboardBaseline(baseline) {
+    localStorage.setItem('computerShopDashboardBaseline', JSON.stringify(baseline));
+  },
   getSales() {
     const s = localStorage.getItem('computerShopSales');
     return s ? JSON.parse(s) : [];
@@ -427,6 +438,7 @@ const ComputerShop = {
   products: [],
   cart: [],
   sales: [],
+  dashboardBaseline: null,
   currentTab: 'pos',
   editingProductId: null,
 
@@ -434,6 +446,7 @@ const ComputerShop = {
     DataManager.initializeData();
     this.products = DataManager.getProducts() || [];
     this.sales = DataManager.getSales();
+    this.dashboardBaseline = DataManager.getDashboardBaseline();
     this.switchTab('pos');
     this.setupEventListeners();
     const today = new Date().toISOString().split('T')[0];
@@ -466,6 +479,7 @@ const ComputerShop = {
     document.getElementById('product-search').addEventListener('input', (e) => this.renderProducts(e.target.value));
     document.getElementById('process-payment').addEventListener('click', () => this.processPayment());
     document.getElementById('clear-cart').addEventListener('click', () => this.clearCart());
+    document.getElementById('reset-dashboard').addEventListener('click', () => this.resetDashboard());
 
     document.getElementById('inventory-search').addEventListener('input', (e) => this.renderInventory(e.target.value));
     document.getElementById('add-product').addEventListener('click', () => this.showProductModal());
@@ -728,6 +742,7 @@ const ComputerShop = {
     this.renderInventory();
     this.renderProducts();
     this.hideProductModal();
+    this.renderDashboard();
   },
 
   deleteProduct(id) {
@@ -739,15 +754,32 @@ const ComputerShop = {
     this.renderDashboard();
   },
 
+  resetDashboard() {
+    if (!confirm('Reset the dashboard overview? Saved sales, inventory, and reports will remain unchanged.')) return;
+    const productStock = Object.fromEntries(this.products.map(product => [product.id, product.quantity]));
+    this.dashboardBaseline = { timestamp: Date.now(), productStock };
+    DataManager.saveDashboardBaseline(this.dashboardBaseline);
+    this.renderDashboard();
+  },
+
   renderDashboard() {
-    const totalProducts = this.products.length;
-    const lowStockCount = this.products.filter(p => p.quantity > 0 && p.quantity < 5).length;
+    const baseline = this.dashboardBaseline;
+    const baselineStock = baseline ? baseline.productStock : {};
+    const totalProducts = baseline
+      ? this.products.filter(product => !Object.hasOwn(baselineStock, product.id)).length
+      : this.products.length;
+    const lowStock = this.products
+      .filter(product => product.quantity < 5 && (!baseline || !Object.hasOwn(baselineStock, product.id) || product.quantity !== baselineStock[product.id]))
+      .sort((a, b) => a.quantity - b.quantity)
+      .slice(0, 5);
+    const lowStockCount = lowStock.filter(product => product.quantity > 0).length;
+    const dashboardSales = this.sales.filter(sale => !baseline || new Date(sale.date).getTime() >= baseline.timestamp);
     const today = new Date().toDateString();
-    const todaySales = this.sales
+    const todaySales = dashboardSales
       .filter(s => new Date(s.date).toDateString() === today)
       .reduce((sum, s) => sum + s.total, 0);
     const now = new Date();
-    const monthlyRevenue = this.sales
+    const monthlyRevenue = dashboardSales
       .filter(s => {
         const d = new Date(s.date);
         return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
@@ -760,7 +792,7 @@ const ComputerShop = {
 
     const recentSales = document.getElementById('recent-sales');
     recentSales.innerHTML = '';
-    const recent = [...this.sales].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+    const recent = [...dashboardSales].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
     if (recent.length === 0) {
       recentSales.innerHTML = '<tr><td colspan="3" style="text-align:center;">No recent sales</td></tr>';
     } else {
@@ -777,10 +809,6 @@ const ComputerShop = {
 
     const lowStockItems = document.getElementById('low-stock-items');
     lowStockItems.innerHTML = '';
-    const lowStock = this.products
-      .filter(p => p.quantity < 5)
-      .sort((a, b) => a.quantity - b.quantity)
-      .slice(0, 5);
     if (lowStock.length === 0) {
       lowStockItems.innerHTML = '<tr><td colspan="4" style="text-align:center;">No low stock items</td></tr>';
     } else {
