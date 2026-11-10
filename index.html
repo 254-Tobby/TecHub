@@ -670,7 +670,7 @@ const ComputerShop = {
     for (const item of this.cart) {
       const product = this.products.find(p => p.id === item.id);
       if (product.quantity < item.quantity) {
-        alert(Insufficient stock for ${product.name}. Only ${product.quantity} available.);
+        alert(`Insufficient stock for ${product.name}. Only ${product.quantity} available.`);
         return;
       }
     }
