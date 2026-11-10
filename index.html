@@ -137,6 +137,41 @@ tr:hover{background:#f8f9fa}
 .badge-danger{background:#fadbd8;color:#e74c3c}
 .hidden{display:none!important}
 .empty-cart,.no-products{text-align:center;padding:20px;color:#6c757d;font-style:italic}
+
+:root{--gold:#c49a3a;--gold-hover:#a97f1f;--charcoal:#252525;--ivory:#f6f2e8;--surface:#fffdf7;--line:#e4ddce}
+body{background:var(--ivory);color:var(--charcoal)}
+header,.mobile-menu{background:var(--charcoal);background-image:none}
+nav ul li a:hover,nav ul li a.active,.mobile-menu ul li a:hover,.mobile-menu ul li a.active{background:var(--gold);color:var(--charcoal)}
+.mobile-menu ul li{border-color:#454545}
+.logo i,nav ul li a i,.mobile-menu ul li a i,.tab i,.summary-card i,.shopping-cart h3 i,.product-search i,.search-box i,.modal-header h2 i{color:var(--gold)}
+.btn,.btn-success,.btn-success:hover,.btn-danger,.btn-danger:hover{background:var(--gold);color:var(--charcoal)}
+.btn:hover,.btn-success:hover,.btn-danger:hover{background:var(--gold-hover);color:#fff}
+.btn-secondary,.btn-secondary:hover{background:var(--charcoal);color:var(--ivory)}
+.tab{background:var(--surface);color:var(--charcoal)}
+.tab.active{background:var(--gold);color:var(--charcoal)}
+.tab:hover:not(.active){background:#eee5d1}
+.tabs,.tab-content,.summary-card,.product-card,.cart-total,.report-results,.report-summary-card,.modal-content{background:var(--surface)}
+.summary-card i{color:var(--gold)}
+h1,h2,h3,h4,.invoice-header h1,.modal-header h2,.shopping-cart h3,.summary-card h3,.report-summary-card h4,.product-card h4{color:var(--gold)}
+.summary-card .value,.report-summary-card .value,.cart-total p,.product-card h4,th{color:var(--charcoal)}
+.product-card .price,.cart-item-price{color:var(--gold-hover)}
+.product-search input:focus,.search-box input:focus,.report-filters select:focus,.report-filters input:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px rgba(196,154,58,.2)}
+.product-card:hover{border-color:var(--gold)}
+.shopping-cart{background:var(--ivory)}
+.shopping-cart h3{border-color:var(--gold)}
+.quantity-btn{background:var(--gold);color:var(--charcoal)}
+table{box-shadow:0 2px 8px rgba(37,37,37,.06)}
+th{background:#eee8da}
+th,td,.cart-item{border-color:var(--line)}
+tr:hover{background:#f3eddf}
+.modal-header{border-color:var(--line)}
+.invoice-header{border-color:var(--gold)}
+.invoice-footer{border-color:var(--line)}
+.app-footer{background:var(--charcoal);color:var(--ivory);border-top:3px solid var(--gold)}
+.app-footer .container{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:14px;padding-bottom:14px}
+.app-footer strong{color:var(--gold)}
+.empty-cart,.no-products{color:#706b60}
+@media(max-width:576px){.app-footer .container{flex-direction:column;text-align:center}}
 </style>
 </head>
 <body>
@@ -264,6 +299,8 @@ tr:hover{background:#f8f9fa}
     </div>
   </div>
 </div>
+
+<footer class="app-footer"><div class="container"><strong>TechHub POS</strong><span>TechHub Computer Shop</span></div></footer>
 
 <!-- INVOICE MODAL -->
 <div class="modal-overlay" id="invoice-modal">
