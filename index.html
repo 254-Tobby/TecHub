@@ -19,8 +19,6 @@ nav ul li{margin-left:12px}
 nav ul li a{color:#fff;text-decoration:none;padding:6px 10px;border-radius:3px;transition:all .3s;display:flex;align-items:center;font-size:13px}
 nav ul li a i{margin-right:6px;font-size:13px}
 nav ul li a:hover,nav ul li a.active{background:#3498db;transform:translateY(-1px)}
-.user-info{display:flex;align-items:center;gap:8px;color:#fff;font-size:13px}
-.user-avatar{width:25px;height:25px;border-radius:50%;background:#3498db;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px}
 .mobile-menu-toggle{display:none;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:5px}
 .mobile-menu{display:none;position:fixed;top:50px;left:0;right:0;background:#1a1f36;z-index:99;box-shadow:0 5px 10px rgba(0,0,0,.1)}
 .mobile-menu ul{list-style:none;padding:10px 0}
@@ -30,13 +28,6 @@ nav ul li a:hover,nav ul li a.active{background:#3498db;transform:translateY(-1p
 .mobile-menu ul li a i{margin-right:10px;width:20px;text-align:center}
 .mobile-menu ul li a:hover,.mobile-menu ul li a.active{background:#3498db}
 
-.login-container{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#f5f7f9}
-.login-form{background:#fff;padding:30px;border-radius:10px;box-shadow:0 5px 20px rgba(0,0,0,.1);width:100%;max-width:400px}
-.login-form h2{text-align:center;margin-bottom:20px;color:#1a1f36}
-.form-group{margin-bottom:20px}
-.form-group label{display:block;margin-bottom:8px;font-weight:500;color:#1a1f36}
-.form-group input,.form-group select{width:100%;padding:12px 15px;border:1px solid #ddd;border-radius:6px;font-size:16px;transition:border-color .3s}
-.form-group input:focus,.form-group select:focus{border-color:#3498db;outline:none;box-shadow:0 0 0 3px rgba(52,152,219,.2)}
 .btn{background:#3498db;color:#fff;border:none;padding:12px 16px;border-radius:6px;cursor:pointer;transition:all .3s;font-weight:500;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
 .btn i{margin-right:6px}
 .btn:hover{background:#2980b9;transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1)}
@@ -46,11 +37,6 @@ nav ul li a:hover,nav ul li a.active{background:#3498db;transform:translateY(-1p
 .btn-danger:hover{background:#c0392b}
 .btn-secondary{background:#6c757d}
 .btn-secondary:hover{background:#5a6268}
-.demo-accounts{margin-top:20px;padding:15px;background:#e3f2fd;border-radius:6px;font-size:14px}
-.demo-accounts h4{margin-bottom:10px;color:#1a1f36}
-.demo-accounts ul{list-style:none;padding-left:0}
-.demo-accounts li{margin-bottom:5px}
-
 .tabs{display:flex;margin-bottom:20px;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)}
 .tab{padding:12px 24px;cursor:pointer;background:#f8f9fa;transition:all .3s;display:flex;align-items:center;justify-content:center;flex:1;text-align:center}
 .tab i{margin-right:8px}
@@ -140,11 +126,6 @@ tr:hover{background:#f8f9fa}
 .total-row{font-weight:bold;background:#f8f9fa}
 .invoice-footer{text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #dee2e6;color:#6c757d}
 
-.user-role{padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold}
-.role-admin{background:#ffeaa7;color:#d35400}
-.role-manager{background:#d6eaf8;color:#2980b9}
-.role-cashier{background:#d5f5e3;color:#27ae60}
-
 @media(max-width:992px){.pos-container{grid-template-columns:1fr}.dashboard-summary{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}}
 @media(max-width:768px){.header-content{flex-direction:row;text-align:center;gap:10px}nav ul{display:none}.mobile-menu-toggle{display:block}.tabs{flex-direction:column}.invoice-details{flex-direction:column;gap:20px}.report-filters{flex-direction:column;align-items:stretch}.search-box input{width:100%}.inventory-header{flex-direction:column;align-items:stretch;gap:15px}.inventory-actions{justify-content:center}}
 @media(max-width:576px){.container{padding:15px}.tab{padding:10px}.product-list{grid-template-columns:1fr}.cart-actions{grid-template-columns:1fr}.action-buttons{flex-direction:column}}
@@ -171,11 +152,6 @@ tr:hover{background:#f8f9fa}
         <li><a href="#" class="nav-link" data-tab="reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
       </ul>
     </nav>
-    <div id="user-info" style="display:none;">
-      <div class="user-avatar" id="user-avatar">U</div>
-      <div><div id="user-name">User Name</div><div id="user-role" class="user-role role-cashier">Role</div></div>
-      <button id="logout-btn" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
-    </div>
   </div>
   <div class="mobile-menu" id="mobile-menu">
     <ul>
@@ -188,33 +164,16 @@ tr:hover{background:#f8f9fa}
 </header>
 
 <div class="container" style="margin-top:70px;">
-  <div id="login-container">
-    <div class="login-form">
-      <h2><i class="fas fa-lock"></i> TechHub POS Login</h2>
-      <div class="form-group"><label>Username</label><input type="text" id="login-username" value="admin"></div>
-      <div class="form-group"><label>Password</label><input type="password" id="login-password" value="admin123"></div>
-      <button id="login-btn" class="btn btn-success"><i class="fas fa-sign-in-alt"></i> Login</button>
-      <div class="demo-accounts">
-        <h4><i class="fas fa-info-circle"></i> Demo Accounts</h4>
-        <ul>
-          <li><strong>Admin:</strong> admin / admin123</li>
-          <li><strong>Manager:</strong> manager / manager123</li>
-          <li><strong>Cashier:</strong> cashier / cashier123</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div id="main-application" style="display:none;">
+  <div id="main-application" style="display:block;">
     <div class="tabs">
-      <div class="tab active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
-      <div class="tab" data-tab="pos"><i class="fas fa-cash-register"></i> Point of Sale</div>
+      <div class="tab" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
+      <div class="tab active" data-tab="pos"><i class="fas fa-cash-register"></i> Point of Sale</div>
       <div class="tab" data-tab="inventory"><i class="fas fa-boxes"></i> Inventory</div>
       <div class="tab" data-tab="reports"><i class="fas fa-chart-bar"></i> Reports</div>
     </div>
 
     <!-- DASHBOARD -->
-    <div id="dashboard" class="tab-content active">
+    <div id="dashboard" class="tab-content">
       <h2>Shop Overview</h2>
       <div class="dashboard-summary">
         <div class="summary-card"><i class="fas fa-shopping-cart"></i><h3>TODAY'S SALES</h3><div class="value">KES <span id="today-sales">0.00</span></div></div>
@@ -235,7 +194,7 @@ tr:hover{background:#f8f9fa}
     </div>
 
     <!-- POS -->
-    <div id="pos" class="tab-content">
+    <div id="pos" class="tab-content active">
       <div class="pos-container">
         <div class="product-section">
           <div class="product-search"><i class="fas fa-search"></i>
@@ -394,19 +353,8 @@ const AuthManager = {
     this.updateUI();
   },
   updateUI() {
-    if (this.currentUser) {
-      document.getElementById('login-container').style.display = 'none';
-      document.getElementById('main-application').style.display = 'block';
-      document.getElementById('user-info').style.display = 'flex';
-      document.getElementById('user-name').textContent = this.currentUser.fullName;
-      document.getElementById('user-role').textContent = this.currentUser.role;
-      document.getElementById('user-role').className = 'user-role role-' + this.currentUser.role;
-      document.getElementById('user-avatar').textContent = this.currentUser.fullName.charAt(0);
-    } else {
-      document.getElementById('login-container').style.display = 'flex';
-      document.getElementById('main-application').style.display = 'none';
-      document.getElementById('user-info').style.display = 'none';
-    }
+    const app = document.getElementById('main-application');
+    if (app) app.style.display = 'block';
   }
 };
 
@@ -476,14 +424,15 @@ const ComputerShop = {
   products: [],
   cart: [],
   sales: [],
-  currentTab: 'dashboard',
+  currentTab: 'pos',
   editingProductId: null,
 
   init() {
     DataManager.initializeData();
     this.products = DataManager.getProducts() || [];
     this.sales = DataManager.getSales();
-    AuthManager.init();
+    AuthManager.login('admin', 'admin123');
+    this.switchTab('pos');
     this.setupEventListeners();
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('report-start-date').value = today;
@@ -503,28 +452,6 @@ const ComputerShop = {
         this.switchTab(link.dataset.tab);
         document.getElementById('mobile-menu').style.display = 'none';
       });
-    });
-
-    document.getElementById('login-btn').addEventListener('click', () => {
-      const u = document.getElementById('login-username').value;
-      const p = document.getElementById('login-password').value;
-      if (u && p) {
-        if (AuthManager.login(u, p)) {
-          alert('Login successful! Welcome back, ' + u);
-          this.renderDashboard();
-          this.renderProducts();
-          this.renderInventory();
-        } else {
-          alert('Invalid username or password.');
-        }
-      } else {
-        alert('Please enter both username and password.');
-      }
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      AuthManager.logout();
-      alert('You have been logged out.');
     });
 
     document.querySelectorAll('.tab, .nav-link').forEach(el => {
