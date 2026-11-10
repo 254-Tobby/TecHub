@@ -183,8 +183,8 @@ tr:hover{background:#f8f9fa}
       </div>
       <h2>Recent Sales</h2>
       <div class="report-results">
-        <table><thead><tr><th>Invoice #</th><th>Date</th><th>Cashier</th><th>Amount</th></tr></thead>
-        <tbody id="recent-sales"><tr><td colspan="4" style="text-align:center;">No recent sales</td></tr></tbody></table>
+        <table><thead><tr><th>Invoice #</th><th>Date</th><th>Amount</th></tr></thead>
+        <tbody id="recent-sales"><tr><td colspan="3" style="text-align:center;">No recent sales</td></tr></tbody></table>
       </div>
       <h2>Low Stock Alert</h2>
       <div class="report-results">
@@ -325,39 +325,6 @@ tr:hover{background:#f8f9fa}
 </div>
 
 <script>
-// Simple hardcoded auth (user management removed)
-const AuthManager = {
-  currentUser: null,
-  users: [
-    { id:1, username:'admin',   password:'admin123',   fullName:'Administrator User', role:'admin'   },
-    { id:2, username:'manager', password:'manager123', fullName:'Manager User',       role:'manager' },
-    { id:3, username:'cashier', password:'cashier123', fullName:'Cashier User',       role:'cashier' }
-  ],
-  init() {
-    const saved = localStorage.getItem('computerShopCurrentUser');
-    if (saved) { this.currentUser = JSON.parse(saved); this.updateUI(); }
-  },
-  login(username, password) {
-    const user = this.users.find(u => u.username === username && u.password === password);
-    if (user) {
-      this.currentUser = user;
-      localStorage.setItem('computerShopCurrentUser', JSON.stringify(user));
-      this.updateUI();
-      return true;
-    }
-    return false;
-  },
-  logout() {
-    this.currentUser = null;
-    localStorage.removeItem('computerShopCurrentUser');
-    this.updateUI();
-  },
-  updateUI() {
-    const app = document.getElementById('main-application');
-    if (app) app.style.display = 'block';
-  }
-};
-
 // Data management with localStorage
 const DataManager = {
   getProducts() {
@@ -412,8 +379,7 @@ const DataManager = {
         this.saveSale({
           id: new Date().getTime() + i + j,
           date: date.toISOString(),
-          items, total,
-          userId: 1, userName: 'admin'
+          items, total
         });
       }
     }
@@ -431,7 +397,6 @@ const ComputerShop = {
     DataManager.initializeData();
     this.products = DataManager.getProducts() || [];
     this.sales = DataManager.getSales();
-    AuthManager.login('admin', 'admin123');
     this.switchTab('pos');
     this.setupEventListeners();
     const today = new Date().toISOString().split('T')[0];
@@ -610,9 +575,7 @@ const ComputerShop = {
       id: new Date().getTime(),
       date: new Date().toISOString(),
       items: [...this.cart],
-      total: this.cart.reduce((s, i) => s + i.price * i.quantity, 0),
-      userId: AuthManager.currentUser.id,
-      userName: AuthManager.currentUser.username
+      total: this.cart.reduce((s, i) => s + i.price * i.quantity, 0)
     };
     this.sales.push(sale);
     DataManager.saveSale(sale);
@@ -762,14 +725,13 @@ const ComputerShop = {
     recentSales.innerHTML = '';
     const recent = [...this.sales].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
     if (recent.length === 0) {
-      recentSales.innerHTML = '<tr><td colspan="4" style="text-align:center;">No recent sales</td></tr>';
+      recentSales.innerHTML = '<tr><td colspan="3" style="text-align:center;">No recent sales</td></tr>';
     } else {
       recent.forEach(sale => {
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${sale.id}</td>
           <td>${new Date(sale.date).toLocaleDateString()}</td>
-          <td>${sale.userName}</td>
           <td>KES ${sale.total.toFixed(2)}</td>
         `;
         recentSales.appendChild(row);
