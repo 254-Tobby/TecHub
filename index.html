@@ -123,7 +123,10 @@ tr:hover{background:#f8f9fa}
 .specifications-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
 .form-actions{display:flex;justify-content:flex-end;gap:15px;margin-top:25px}
 .product-specs{font-size:12px;color:#706b60;margin:0 0 10px;line-height:1.5}
-.product-specs span+span::before{content:" · ";color:var(--gold-hover)}
+.product-specs summary{width:fit-content;color:var(--gold-hover);font-weight:600;cursor:pointer}
+.product-specs ul{list-style:none;padding:8px 10px;margin:6px 0 0;background:#f8f5ec;border-radius:6px}
+.product-specs li+li{margin-top:3px}
+.product-specs strong{color:var(--charcoal)}
 
 .invoice{background:#fff;padding:30px;max-width:800px;margin:0 auto;box-shadow:0 0 20px rgba(0,0,0,.1);border-radius:10px}
 .invoice-header{text-align:center;margin-bottom:30px;padding-bottom:20px;border-bottom:2px solid #3498db}
@@ -637,7 +640,7 @@ const ComputerShop = {
       card.className = 'product-card';
       const specs = this.getSpecificationEntries(product);
       const specSummary = specs.length
-        ? `<div class="product-specs">${specs.map(field => `<span>${this.escapeHtml(field.label)}: ${this.escapeHtml(field.value)}</span>`).join('')}</div>`
+        ? `<details class="product-specs"><summary>View specifications</summary><ul>${specs.map(field => `<li><strong>${this.escapeHtml(field.label)}:</strong> ${this.escapeHtml(field.value)}</li>`).join('')}</ul></details>`
         : '';
       card.innerHTML = `
         <h4>${product.name}</h4>
@@ -647,6 +650,8 @@ const ComputerShop = {
         ${specSummary}
         <div class="stock ${product.quantity < 5 ? 'low-stock' : ''}">Stock: ${product.quantity}</div>
       `;
+      const specifications = card.querySelector('.product-specs');
+      if (specifications) specifications.addEventListener('click', event => event.stopPropagation());
       card.addEventListener('click', () => this.addToCart(product));
       productList.appendChild(card);
     });
