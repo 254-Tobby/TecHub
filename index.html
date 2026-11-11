@@ -114,7 +114,16 @@ tr:hover{background:#f8f9fa}
 .modal-header h2 i{margin-right:10px}
 .modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:#6c757d;padding:5px}
 .modal-body{padding:20px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;margin-bottom:6px;font-weight:600;color:#343a40}
+.form-group input,.form-group select{width:100%;padding:10px 12px;border:1px solid #d6d3ca;border-radius:6px;background:#fffdf7;color:#252525;font-size:14px}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px rgba(196,154,58,.2)}
+.specifications-fieldset{border:1px solid var(--line);border-radius:8px;padding:14px;margin:20px 0}
+.specifications-fieldset legend{padding:0 8px;font-weight:700;color:var(--gold-hover)}
+.specifications-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
 .form-actions{display:flex;justify-content:flex-end;gap:15px;margin-top:25px}
+.product-specs{font-size:12px;color:#706b60;margin:0 0 10px;line-height:1.5}
+.product-specs span+span::before{content:" · ";color:var(--gold-hover)}
 
 .invoice{background:#fff;padding:30px;max-width:800px;margin:0 auto;box-shadow:0 0 20px rgba(0,0,0,.1);border-radius:10px}
 .invoice-header{text-align:center;margin-bottom:30px;padding-bottom:20px;border-bottom:2px solid #3498db}
@@ -123,12 +132,16 @@ tr:hover{background:#f8f9fa}
 .invoice-items{width:100%;margin-bottom:30px;border-collapse:collapse}
 .invoice-items th{background:#f8f9fa;padding:15px;text-align:left;border-bottom:2px solid #dee2e6}
 .invoice-items td{padding:15px;border-bottom:1px solid #dee2e6}
+.invoice-spec-row td{padding:0 15px 12px 15px;font-size:12px;color:#706b60}
+.invoice-specs{display:flex;flex-wrap:wrap;gap:4px 12px;padding:8px 10px;background:#f8f5ec;border-left:3px solid var(--gold);border-radius:0 4px 4px 0}
+.invoice-specs span{white-space:nowrap}
+.invoice-specs strong{color:#4b4538}
 .total-row{font-weight:bold;background:#f8f9fa}
 .invoice-footer{text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #dee2e6;color:#6c757d}
 
 @media(max-width:992px){.pos-container{grid-template-columns:1fr}.dashboard-summary{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}}
 @media(max-width:768px){.header-content{flex-direction:row;text-align:center;gap:10px}nav ul{display:none}.mobile-menu-toggle{display:block}.tabs{flex-direction:column}.invoice-details{flex-direction:column;gap:20px}.report-filters{flex-direction:column;align-items:stretch}.search-box input{width:100%}.inventory-header{flex-direction:column;align-items:stretch;gap:15px}.inventory-actions{justify-content:center}}
-@media(max-width:576px){.container{padding:15px}.tab{padding:10px}.product-list{grid-template-columns:1fr}.cart-actions{grid-template-columns:1fr}.action-buttons{flex-direction:column}}
+@media(max-width:576px){.container{padding:15px}.tab{padding:10px}.product-list{grid-template-columns:1fr}.cart-actions{grid-template-columns:1fr}.action-buttons{flex-direction:column}.specifications-grid{grid-template-columns:1fr}.invoice{padding:16px}.invoice-items th,.invoice-items td{padding:8px 5px}.invoice-spec-row td{padding:0 5px 8px}.invoice-specs{gap:4px 8px}}
 
 .text-success{color:#27ae60}.text-danger{color:#e74c3c}.text-warning{color:#f39c12}
 .badge{display:inline-block;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold}
@@ -237,7 +250,7 @@ tr:hover{background:#f3eddf}
       <div class="pos-container">
         <div class="product-section">
           <div class="product-search"><i class="fas fa-search"></i>
-            <input type="text" id="product-search" placeholder="Search by name, SKU or category...">
+            <input type="text" id="product-search" placeholder="Search by name, SKU, category or specs...">
           </div>
           <div class="product-list" id="product-list"><div class="no-products">No products found</div></div>
         </div>
@@ -259,7 +272,7 @@ tr:hover{background:#f3eddf}
         <h2>Inventory Management</h2>
         <div class="inventory-actions">
           <div class="search-box"><i class="fas fa-search"></i>
-            <input type="text" id="inventory-search" placeholder="Search inventory...">
+            <input type="text" id="inventory-search" placeholder="Search inventory and specs...">
           </div>
           <button id="add-product" class="btn btn-success"><i class="fas fa-plus"></i> Add Product</button>
         </div>
@@ -356,6 +369,18 @@ tr:hover{background:#f3eddf}
         </div>
         <div class="form-group"><label>Price (KES)</label><input type="number" step="0.01" min="0" id="product-price" required></div>
         <div class="form-group"><label>Quantity in Stock</label><input type="number" min="0" id="product-quantity" required></div>
+        <fieldset class="specifications-fieldset">
+          <legend>Computer Specifications <span>(optional)</span></legend>
+          <div class="specifications-grid">
+            <div class="form-group"><label for="product-cpu">CPU</label><input type="text" id="product-cpu" placeholder="e.g. Intel Core i5-1335U"></div>
+            <div class="form-group"><label for="product-ram">RAM</label><input type="text" id="product-ram" placeholder="e.g. 16GB DDR5"></div>
+            <div class="form-group"><label for="product-gpu">GPU</label><input type="text" id="product-gpu" placeholder="e.g. Intel Iris Xe Graphics"></div>
+            <div class="form-group"><label for="product-storage">Storage</label><input type="text" id="product-storage" placeholder="e.g. 512GB NVMe SSD"></div>
+            <div class="form-group"><label for="product-display">Display Size</label><input type="text" id="product-display" placeholder="e.g. 15.6-inch FHD"></div>
+            <div class="form-group"><label for="product-os">Operating System</label><input type="text" id="product-os" placeholder="e.g. Windows 11 Home"></div>
+            <div class="form-group"><label for="product-warranty">Warranty</label><input type="text" id="product-warranty" placeholder="e.g. 1 year"></div>
+          </div>
+        </fieldset>
         <div class="form-actions">
           <button type="button" id="cancel-product" class="btn btn-secondary">Cancel</button>
           <button type="submit" class="btn btn-success">Save Product</button>
@@ -367,6 +392,27 @@ tr:hover{background:#f3eddf}
 
 <script>
 // Data management with localStorage
+const sampleLaptopSpecifications = {
+  'LAP-DEL-001': {
+    cpu: 'Intel Core i5-1335U',
+    ram: '16GB DDR5',
+    gpu: 'Intel Iris Xe Graphics',
+    storage: '512GB NVMe SSD',
+    display: '15.6-inch FHD (1920 x 1080)',
+    os: 'Windows 11 Home',
+    warranty: '1 year'
+  },
+  'LAP-HP-002': {
+    cpu: 'AMD Ryzen 5 7530U',
+    ram: '16GB DDR4',
+    gpu: 'AMD Radeon Graphics',
+    storage: '512GB PCIe NVMe SSD',
+    display: '14-inch FHD (1920 x 1080)',
+    os: 'Windows 11 Home',
+    warranty: '1 year'
+  }
+};
+
 const DataManager = {
   getProducts() {
     const p = localStorage.getItem('computerShopProducts');
@@ -390,10 +436,11 @@ const DataManager = {
     localStorage.setItem('computerShopSales', JSON.stringify(sales));
   },
   initializeData() {
-    if (!this.getProducts()) {
+    let products = this.getProducts();
+    if (!products) {
       const defaults = [
-        { id:1,  sku:'LAP-DEL-001', name:'Dell Inspiron 15 Laptop',   category:'laptops',     price:65000, quantity:8  },
-        { id:2,  sku:'LAP-HP-002',  name:'HP Pavilion 14 Laptop',     category:'laptops',     price:72000, quantity:5  },
+        { id:1,  sku:'LAP-DEL-001', name:'Dell Inspiron 15 Laptop',   category:'laptops',     price:65000, quantity:8,  specifications:sampleLaptopSpecifications['LAP-DEL-001'] },
+        { id:2,  sku:'LAP-HP-002',  name:'HP Pavilion 14 Laptop',     category:'laptops',     price:72000, quantity:5,  specifications:sampleLaptopSpecifications['LAP-HP-002'] },
         { id:3,  sku:'DES-HP-003',  name:'HP ProDesk Desktop',        category:'desktops',    price:48000, quantity:6  },
         { id:4,  sku:'CMP-SSD-001', name:'Kingston 480GB SSD',        category:'components',  price:5500,  quantity:20 },
         { id:5,  sku:'CMP-RAM-002', name:'8GB DDR4 RAM',              category:'components',  price:3800,  quantity:15 },
@@ -404,6 +451,17 @@ const DataManager = {
         { id:10, sku:'SOF-WIN-001', name:'Windows 11 Pro License',    category:'software',    price:15000, quantity:25 }
       ];
       this.saveProducts(defaults);
+      products = defaults;
+    } else {
+      let migrated = false;
+      products.forEach(product => {
+        const sampleSpecifications = sampleLaptopSpecifications[product.sku];
+        if (product.category === 'laptops' && sampleSpecifications && !product.specifications) {
+          product.specifications = sampleSpecifications;
+          migrated = true;
+        }
+      });
+      if (migrated) this.saveProducts(products);
     }
     if (this.getSales().length === 0) this.generateSampleSalesData();
   },
@@ -421,7 +479,13 @@ const DataManager = {
         for (let k = 0; k < itemsCount; k++) {
           const product = products[Math.floor(Math.random() * products.length)];
           const quantity = Math.floor(Math.random() * 3) + 1;
-          items.push({ id: product.id, name: product.name, price: product.price, quantity });
+          items.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity,
+            specifications: product.specifications
+          });
           total += product.price * quantity;
         }
         this.saveSale({
@@ -441,6 +505,44 @@ const ComputerShop = {
   dashboardBaseline: null,
   currentTab: 'pos',
   editingProductId: null,
+  specificationFields: [
+    { key: 'cpu', label: 'CPU' },
+    { key: 'ram', label: 'RAM' },
+    { key: 'gpu', label: 'GPU' },
+    { key: 'storage', label: 'Storage' },
+    { key: 'display', label: 'Display' },
+    { key: 'os', label: 'OS' },
+    { key: 'warranty', label: 'Warranty' }
+  ],
+
+  getSpecificationEntries(product) {
+    const specifications = product.specifications || {};
+    return this.specificationFields
+      .map(field => ({ label: field.label, value: String(specifications[field.key] || '').trim() }))
+      .filter(field => field.value);
+  },
+
+  escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[character]));
+  },
+
+  matchesProductSearch(product, filter) {
+    const term = filter.trim().toLowerCase();
+    if (!term) return true;
+    const searchableValues = [
+      product.name,
+      product.category,
+      product.sku,
+      ...this.getSpecificationEntries(product).map(field => `${field.label} ${field.value}`)
+    ];
+    return searchableValues.some(value => String(value || '').toLowerCase().includes(term));
+  },
 
   init() {
     DataManager.initializeData();
@@ -512,12 +614,7 @@ const ComputerShop = {
   renderProducts(filter = '') {
     const productList = document.getElementById('product-list');
     productList.innerHTML = '';
-    const term = filter.toLowerCase();
-    const filtered = this.products.filter(p =>
-      p.name.toLowerCase().includes(term) ||
-      p.category.toLowerCase().includes(term) ||
-      (p.sku && p.sku.toLowerCase().includes(term))
-    );
+    const filtered = this.products.filter(product => this.matchesProductSearch(product, filter));
     if (filtered.length === 0) {
       productList.innerHTML = '<div class="no-products">No products found</div>';
       return;
@@ -525,11 +622,16 @@ const ComputerShop = {
     filtered.forEach(product => {
       const card = document.createElement('div');
       card.className = 'product-card';
+      const specs = this.getSpecificationEntries(product);
+      const specSummary = specs.length
+        ? `<div class="product-specs">${specs.map(field => `<span>${this.escapeHtml(field.label)}: ${this.escapeHtml(field.value)}</span>`).join('')}</div>`
+        : '';
       card.innerHTML = `
         <h4>${product.name}</h4>
         <div class="price">KES ${product.price.toFixed(2)}</div>
         <div class="category">${product.category}</div>
         <div class="sku">SKU: ${product.sku || '-'}</div>
+        ${specSummary}
         <div class="stock ${product.quantity < 5 ? 'low-stock' : ''}">Stock: ${product.quantity}</div>
       `;
       card.addEventListener('click', () => this.addToCart(product));
@@ -651,6 +753,25 @@ const ComputerShop = {
         <td>KES ${(item.price * item.quantity).toFixed(2)}</td>
       `;
       invoiceItems.appendChild(row);
+      const specifications = this.getSpecificationEntries(item);
+      if (specifications.length) {
+        const specRow = document.createElement('tr');
+        specRow.className = 'invoice-spec-row';
+        const specCell = document.createElement('td');
+        specCell.colSpan = 4;
+        const specList = document.createElement('div');
+        specList.className = 'invoice-specs';
+        specifications.forEach(field => {
+          const entry = document.createElement('span');
+          const label = document.createElement('strong');
+          label.textContent = `${field.label}: `;
+          entry.append(label, document.createTextNode(field.value));
+          specList.appendChild(entry);
+        });
+        specCell.appendChild(specList);
+        specRow.appendChild(specCell);
+        invoiceItems.appendChild(specRow);
+      }
     });
     document.getElementById('invoice-total').textContent = sale.total.toFixed(2);
     document.getElementById('invoice-modal').style.display = 'flex';
@@ -659,12 +780,9 @@ const ComputerShop = {
   renderInventory(filter = '') {
     const tbody = document.getElementById('inventory-table').querySelector('tbody');
     tbody.innerHTML = '';
-    const term = filter.toLowerCase();
     const filtered = this.products.filter(p =>
-      p.name.toLowerCase().includes(term) ||
-      p.category.toLowerCase().includes(term) ||
-      p.id.toString().includes(term) ||
-      (p.sku && p.sku.toLowerCase().includes(term))
+      this.matchesProductSearch(p, filter) ||
+      p.id.toString().includes(filter.trim().toLowerCase())
     );
     if (filtered.length === 0) {
       tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No products found</td></tr>';
@@ -722,6 +840,10 @@ const ComputerShop = {
     document.getElementById('product-category').value = product.category;
     document.getElementById('product-price').value = product.price;
     document.getElementById('product-quantity').value = product.quantity;
+    const specifications = product.specifications || {};
+    this.specificationFields.forEach(field => {
+      document.getElementById(`product-${field.key}`).value = specifications[field.key] || '';
+    });
     document.getElementById('product-modal').style.display = 'flex';
   },
 
@@ -732,11 +854,15 @@ const ComputerShop = {
     const category = document.getElementById('product-category').value;
     const price = parseFloat(document.getElementById('product-price').value);
     const quantity = parseInt(document.getElementById('product-quantity').value);
+    const specifications = Object.fromEntries(this.specificationFields.map(field => [
+      field.key,
+      document.getElementById(`product-${field.key}`).value.trim()
+    ]));
     if (this.editingProductId) {
       const idx = this.products.findIndex(p => p.id === this.editingProductId);
-      this.products[idx] = { id, sku, name, category, price, quantity };
+      this.products[idx] = { ...this.products[idx], id, sku, name, category, price, quantity, specifications };
     } else {
-      this.products.push({ id, sku, name, category, price, quantity });
+      this.products.push({ id, sku, name, category, price, quantity, specifications });
     }
     DataManager.saveProducts(this.products);
     this.renderInventory();
