@@ -363,6 +363,7 @@ tr:hover{background:#f3eddf}
             <option value="components">Components</option>
             <option value="peripherals">Peripherals</option>
             <option value="accessories">Accessories</option>
+            <option value="stylus-pens">Stylus Pens</option>
             <option value="networking">Networking</option>
             <option value="software">Software</option>
           </select>
@@ -448,7 +449,8 @@ const DataManager = {
         { id:7,  sku:'PER-KEY-002', name:'Mechanical Keyboard',       category:'peripherals', price:4500,  quantity:12 },
         { id:8,  sku:'NET-ROU-001', name:'TP-Link WiFi Router',       category:'networking',  price:3500,  quantity:10 },
         { id:9,  sku:'ACC-USB-001', name:'USB-C Hub 7-in-1',          category:'accessories', price:2800,  quantity:18 },
-        { id:10, sku:'SOF-WIN-001', name:'Windows 11 Pro License',    category:'software',    price:15000, quantity:25 }
+        { id:10, sku:'SOF-WIN-001', name:'Windows 11 Pro License',    category:'software',    price:15000, quantity:25 },
+        { id:11, sku:'STY-ACT-001', name:'Universal Active Stylus Pen', category:'stylus-pens', price:3500, quantity:12 }
       ];
       this.saveProducts(defaults);
       products = defaults;
@@ -461,6 +463,17 @@ const DataManager = {
           migrated = true;
         }
       });
+      if (!products.some(product => product.sku === 'STY-ACT-001')) {
+        products.push({
+          id: Math.max(...products.map(product => Number(product.id) || 0), 0) + 1,
+          sku: 'STY-ACT-001',
+          name: 'Universal Active Stylus Pen',
+          category: 'stylus-pens',
+          price: 3500,
+          quantity: 12
+        });
+        migrated = true;
+      }
       if (migrated) this.saveProducts(products);
     }
     if (this.getSales().length === 0) this.generateSampleSalesData();
@@ -1042,17 +1055,23 @@ const ComputerShop = {
     if (sales === null) return;
 
     const rows = [['Date', 'Invoice #', 'Product', 'Quantity', 'Amount']];
+    let totalQuantity = 0;
+    let totalAmount = 0;
     sales.forEach(sale => {
       sale.items.forEach(item => {
+        const amount = item.price * item.quantity;
+        totalQuantity += item.quantity;
+        totalAmount += amount;
         rows.push([
           new Date(sale.date).toLocaleDateString(),
           sale.id,
           item.name,
           item.quantity,
-          (item.price * item.quantity).toFixed(2)
+          amount.toFixed(2)
         ]);
       });
     });
+    rows.push(['REPORT TOTAL', '', '', totalQuantity, totalAmount.toFixed(2)]);
     const escapeCsvCell = value => {
       let text = String(value ?? '');
       if (/^[\s]*[=+\-@]/.test(text)) text = `'${text}`;
